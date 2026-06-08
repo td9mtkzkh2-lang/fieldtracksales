@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2563EB">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FieldTrack">
+<title>FieldTrack — App Agente</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0F172A;color:#e5e7eb;font-family:'Sora',sans-serif;min-height:100vh;max-width:480px;margin:0 auto}
+  input,select,textarea,button{font-family:'Sora',sans-serif}
+  .hidden{display:none!important}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 4px #2563EB20}50%{box-shadow:0 0 0 12px #2563EB08}}
+  @keyframes pulseRed{0%,100%{box-shadow:0 0 0 4px #ef444420}50%{box-shadow:0 0 0 14px #ef444408}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeIn .25s ease}
+  textarea{resize:vertical}
+  .tab-active{background:#2563EB20!important;border:1px solid #2563EB55!important;color:#60A5FA!important}
+</style>
+</head>
+<body>
+
+
+<div id="loginScreen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px">
+  <div style="width:100%">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="background:#fff;border-radius:12px;padding:10px 16px;display:inline-block;box-shadow:0 4px 16px rgba(0,0,0,.2);margin-bottom:8px"><img src="data:image/jpeg;base64,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" style="height:52px;width:auto;display:block"></div>
+      <div style="font-size:11px;color:#2563EB;letter-spacing:2px;font-family:'Space Mono',monospace;margin-top:4px">APP AGENTE</div>
+    </div>
+    <div style="background:#1E293B;border:1px solid #ffffff0f;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:16px">
+      <div style="background:#2563EB10;border:1px solid #2563EB30;border-radius:10px;padding:12px;font-size:13px;color:#60A5FA;line-height:1.5">
+        👋 Inserisci il <strong>codice invito</strong> ricevuto dal manager e scegli una password.
+      </div>
+      <div>
+        <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">CODICE INVITO</label>
+        <input id="agentCode" placeholder="Es. FT-ABC123" style="display:block;width:100%;margin-top:6px;background:#0F172A;border:1px solid #ffffff15;border-radius:9px;padding:12px 14px;color:#e5e7eb;font-size:15px;font-family:'Space Mono',monospace;letter-spacing:2px;text-transform:uppercase">
+      </div>
+      <div>
+        <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">LA TUA EMAIL</label>
+        <input id="agentEmail" type="email" placeholder="tua@email.it" style="display:block;width:100%;margin-top:6px;background:#0F172A;border:1px solid #ffffff15;border-radius:9px;padding:12px 14px;color:#e5e7eb;font-size:14px">
+      </div>
+      <div>
+        <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">SCEGLI PASSWORD</label>
+        <input id="agentPwd" type="password" placeholder="min 6 caratteri" style="display:block;width:100%;margin-top:6px;background:#0F172A;border:1px solid #ffffff15;border-radius:9px;padding:12px 14px;color:#e5e7eb;font-size:14px">
+      </div>
+      <div id="loginErr" style="color:#ef4444;font-size:12px;text-align:center;display:none"></div>
+      <button onclick="agentLogin()" style="background:linear-gradient(135deg,#2563EB,#1D4ED8);border:none;color:#fff;border-radius:12px;padding:14px;font-weight:800;font-size:16px">Accedi →</button>
+      <button onclick="agentLoginOnly()" style="background:transparent;border:1px solid #ffffff15;color:#9ca3af;border-radius:12px;padding:11px;font-size:13px">Già registrato? Solo login</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="agentApp" class="hidden" style="min-height:100vh;display:flex;flex-direction:column">
+
+  
+  <div style="background:#1E293B;border-bottom:1px solid #ffffff10;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="background:#fff;border-radius:8px;padding:4px 8px;display:flex;align-items:center"><span style="font-size:16px;font-weight:900;color:#2563EB;letter-spacing:-0.5px">Field<span style="color:#22c55e">Track</span></span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span id="gpsStatus" style="font-size:10px;color:#6b7280">📍 —</span>
+      <div id="agentAvatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px">?</div>
+      <button onclick="agentLogout()" style="background:#ffffff10;border:none;color:#6b7280;border-radius:6px;padding:4px 8px;font-size:11px">Esci</button>
+    </div>
+  </div>
+
+  
+  <div style="background:#0F172A;border-bottom:1px solid #ffffff10;padding:8px 16px;display:flex;gap:8px">
+    <button id="navNew" onclick="showView('new')" class="tab-active" style="flex:1;background:transparent;border:1px solid transparent;color:#9ca3af;border-radius:8px;padding:7px 4px;font-size:12px;font-weight:600">➕ Nuova</button>
+    <button id="navFlash" onclick="showView('flash')" style="flex:1;background:transparent;border:1px solid transparent;color:#9ca3af;border-radius:8px;padding:7px 4px;font-size:12px;font-weight:600">⚡ Flash</button>
+    <button id="navList" onclick="showView('list')" style="flex:1;background:transparent;border:1px solid transparent;color:#9ca3af;border-radius:8px;padding:7px 4px;font-size:12px;font-weight:600">📋 Visite</button>
+  </div>
+
+  
+  <div id="viewNew" style="flex:1;display:flex;flex-direction:column">
+
+    
+    <div style="background:#0F172A;padding:12px 16px;display:flex;align-items:center;gap:12px">
+      <div class="step-dot" id="dot0" style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0">1</div>
+      <div id="line01" style="flex:1;height:2px;background:#1f2937;border-radius:2px;overflow:hidden"><div style="height:100%;width:0%;background:linear-gradient(90deg,#2563EB,#1D4ED8);transition:width .4s"></div></div>
+      <div class="step-dot" id="dot1" style="width:28px;height:28px;border-radius:50%;background:#1f2937;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#6b7280;flex-shrink:0">2</div>
+      <div id="line12" style="flex:1;height:2px;background:#1f2937;border-radius:2px;overflow:hidden"><div style="height:100%;width:0%;background:linear-gradient(90deg,#2563EB,#1D4ED8);transition:width .4s"></div></div>
+      <div class="step-dot" id="dot2" style="width:28px;height:28px;border-radius:50%;background:#1f2937;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#6b7280;flex-shrink:0">3</div>
+      <div id="line23" style="flex:1;height:2px;background:#1f2937;border-radius:2px;overflow:hidden"><div style="height:100%;width:0%;background:linear-gradient(90deg,#2563EB,#1D4ED8);transition:width .4s"></div></div>
+      <div class="step-dot" id="dot3" style="width:28px;height:28px;border-radius:50%;background:#1f2937;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#6b7280;flex-shrink:0">✓</div>
+    </div>
+
+    <div style="flex:1;padding:20px 16px;overflow-y:auto">
+
+      
+      <div id="step0" class="fade">
+        <h2 style="font-weight:800;font-size:20px;margin-bottom:6px">📋 Tipo di visita</h2>
+        <p style="color:#6b7280;font-size:13px;margin-bottom:16px">Seleziona il tipo e poi scatta una foto (opzionale).</p>
+
+        
+        <div style="margin-bottom:20px">
+          <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700;display:block;margin-bottom:8px">TIPO CONTATTO</label>
+          <div style="display:flex;gap:8px">
+            <button class="type-btn" data-t="business" onclick="setType('business')" style="flex:1;padding:12px 4px;border-radius:10px;border:2px solid #2563EB;background:#2563EB22;color:#60A5FA;font-weight:700;font-size:13px">🏢 Azienda</button>
+            <button class="type-btn" data-t="residential" onclick="setType('residential')" style="flex:1;padding:12px 4px;border-radius:10px;border:2px solid #ffffff15;background:#1E293B;color:#6b7280;font-weight:700;font-size:13px">🏠 Privato</button>
+          </div>
+        </div>
+
+        
+        <h3 style="font-weight:700;font-size:15px;margin-bottom:6px">📷 Foto biglietto <span style="color:#6b7280;font-weight:400;font-size:12px">(opzionale)</span></h3>
+        <div id="photoArea" onclick="document.getElementById('photoInput').click()" style="border:2px dashed #ffffff20;border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;background:#1E293B;margin-bottom:16px;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div style="font-size:40px;margin-bottom:8px">📸</div>
+          <div style="font-weight:600;color:#9ca3af;font-size:14px">Tocca per foto</div>
+          <div style="font-size:11px;color:#4b5563;margin-top:3px">Biglietto da visita, scontrino</div>
+        </div>
+        <input id="photoInput" type="file" accept="image/*" capture="environment" onchange="photoSelected(this)" style="display:none">
+
+        <div id="photoPreviewWrap" style="display:none;margin-bottom:16px;text-align:center">
+          <img id="photoPreview" style="max-width:100%;max-height:180px;border-radius:12px;object-fit:contain">
+          <div style="margin-top:8px">
+            <button onclick="document.getElementById('photoInput').click()" style="background:#ffffff10;border:1px solid #ffffff20;color:#9ca3af;border-radius:8px;padding:6px 12px;font-size:12px">↻ Cambia</button>
+            <button onclick="clearPhoto()" style="background:#ef444410;border:1px solid #ef444430;color:#ef4444;border-radius:8px;padding:6px 12px;font-size:12px;margin-left:6px">✕ Rimuovi</button>
+          </div>
+        </div>
+
+        <button id="btnAnalyzePhoto" onclick="analyzePhoto()" style="display:none;width:100%;background:linear-gradient(135deg,#2563EB,#1D4ED8);border:none;color:#fff;border-radius:12px;padding:13px;font-weight:800;font-size:15px;margin-bottom:10px">
+          🔍 Estrai dati →
+        </button>
+        <button onclick="goStep(1)" style="width:100%;background:transparent;border:1px solid #ffffff15;color:#6b7280;border-radius:12px;padding:12px;font-size:13px">
+          Avanti senza foto →
+        </button>
+      </div>
+
+      
+      <div id="step1" class="hidden fade">
+        <h2 style="font-weight:800;font-size:20px;margin-bottom:6px">🎤 Esito Visita</h2>
+        <p style="color:#6b7280;font-size:13px;margin-bottom:20px">Registra un vocale oppure scrivi l'esito.</p>
+
+        <div style="text-align:center;margin-bottom:20px">
+          <button id="recBtn" onclick="toggleRecording()" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);border:none;color:#fff;font-size:36px;animation:pulse 2s infinite;cursor:pointer">🎤</button>
+          <div id="recStatus" style="margin-top:12px;font-size:13px;color:#6b7280;font-weight:600">Tocca per registrare</div>
+          <div id="recTimer" style="font-size:11px;color:#4b5563;margin-top:4px;font-family:'Space Mono',monospace"></div>
+        </div>
+
+        <textarea id="transcriptBox" placeholder="Il trascritto apparirà qui… oppure scrivi tu." rows="4" style="width:100%;background:#1E293B;border:1px solid #ffffff15;border-radius:12px;padding:14px;color:#e5e7eb;font-size:14px;margin-bottom:16px"></textarea>
+
+        <button onclick="analyzeVoice()" style="width:100%;background:linear-gradient(135deg,#2563EB,#1D4ED8);border:none;color:#fff;border-radius:12px;padding:14px;font-weight:800;font-size:16px;margin-bottom:10px">
+          🔍 Estrai dati →
+        </button>
+        <button onclick="skipVoice()" style="width:100%;background:transparent;border:1px solid #ffffff15;color:#6b7280;border-radius:12px;padding:12px;font-size:13px">
+          Vai avanti senza analisi
+        </button>
+      </div>
+
+      
+      <div id="step2" class="hidden fade">
+        <h2 style="font-weight:800;font-size:20px;margin-bottom:6px">✏️ Revisione</h2>
+        <p style="color:#6b7280;font-size:13px;margin-bottom:16px">Controlla e completa i dati.</p>
+
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px">
+          <div>
+            <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">CONTATTO / NOME</label>
+            <input id="rContact" style="display:block;width:100%;margin-top:5px;background:#1E293B;border:1px solid #ffffff15;border-radius:9px;padding:11px 14px;color:#e5e7eb;font-size:14px">
+          </div>
+          <div id="addressRow">
+            <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">INDIRIZZO</label>
+            <input id="rAddress" style="display:block;width:100%;margin-top:5px;background:#1E293B;border:1px solid #ffffff15;border-radius:9px;padding:11px 14px;color:#e5e7eb;font-size:14px">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">EMAIL</label>
+            <input id="rEmail" type="email" style="display:block;width:100%;margin-top:5px;background:#1E293B;border:1px solid #ffffff15;border-radius:9px;padding:11px 14px;color:#e5e7eb;font-size:14px">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">TELEFONO</label>
+            <input id="rPhone" style="display:block;width:100%;margin-top:5px;background:#1E293B;border:1px solid #ffffff15;border-radius:9px;padding:11px 14px;color:#e5e7eb;font-size:14px">
+          </div>
+          <div>
+            <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700">ESITO VISITA</label>
+            <textarea id="rOutcome" rows="3" style="display:block;width:100%;margin-top:5px;background:#1E293B;border:1px solid #ffffff15;border-radius:9px;padding:11px 14px;color:#e5e7eb;font-size:14px"></textarea>
+          </div>
+          <div>
+            <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700;display:block;margin-bottom:8px">RISULTATO</label>
+            <div style="display:flex;gap:8px">
+              <button class="result-btn" data-r="positive" onclick="setResult('positive')" style="flex:1;padding:10px 4px;border-radius:10px;border:2px solid #ffffff15;background:#1E293B;color:#6b7280;font-weight:700;font-size:12px;cursor:pointer">✓ Positivo</button>
+              <button class="result-btn" data-r="followup" onclick="setResult('followup')" style="flex:1;padding:10px 4px;border-radius:10px;border:2px solid #f59e0b;background:#f59e0b22;color:#f59e0b;font-weight:700;font-size:12px;cursor:pointer">↻ Follow-up</button>
+              <button class="result-btn" data-r="negative" onclick="setResult('negative')" style="flex:1;padding:10px 4px;border-radius:10px;border:2px solid #ffffff15;background:#1E293B;color:#6b7280;font-weight:700;font-size:12px;cursor:pointer">✗ Negativo</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="gpsInfo" style="background:#0F172A;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#6b7280">📍 Acquisizione GPS…</div>
+
+        <button onclick="submitVisit()" style="width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;color:#fff;border-radius:12px;padding:15px;font-weight:800;font-size:17px;cursor:pointer">
+          ✓ Invia Visita
+        </button>
+      </div>
+
+      
+      <div id="step3" class="hidden fade" style="text-align:center;padding-top:30px">
+        <div style="font-size:72px;margin-bottom:12px" id="successEmoji">🎉</div>
+        <h2 style="font-weight:800;font-size:26px;margin-bottom:6px;color:#22c55e">Visita registrata!</h2>
+        <p style="color:#6b7280;font-size:14px;margin-bottom:20px">Dati inviati al manager in tempo reale.</p>
+        <div style="background:#1E293B;border:1px solid #2563EB33;border-radius:16px;padding:16px 24px;margin-bottom:24px;display:inline-block">
+          <div style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700;margin-bottom:4px">VISITE OGGI</div>
+          <div id="todayCount" style="font-size:48px;font-weight:800;color:#2563EB;font-family:'Space Mono',monospace">0</div>
+          <div style="font-size:11px;color:#6b7280;margin-top:2px" id="todayLabel">caricamento...</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button onclick="resetWizard()" style="background:linear-gradient(135deg,#2563EB,#1D4ED8);border:none;color:#fff;border-radius:12px;padding:14px 40px;font-weight:800;font-size:16px;cursor:pointer">
+            + Nuova Visita
+          </button>
+          <button onclick="showView('list')" style="background:transparent;border:1px solid #ffffff20;color:#9ca3af;border-radius:10px;padding:10px 24px;font-size:13px;cursor:pointer">📋 Vedi le mie visite</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  
+  <div id="viewList" class="hidden" style="flex:1;padding:16px;overflow-y:auto">
+    <h2 style="font-weight:800;font-size:20px;margin-bottom:16px">📋 Le mie visite</h2>
+    <div id="myVisitsList"></div>
+  </div>
+
+  <!-- VIEW: TURBO -->
+  <div id="viewFlash" class="hidden" style="flex:1;padding:20px 16px;overflow-y:auto">
+    <h2 style="font-weight:800;font-size:20px;margin-bottom:6px">⚡ Modalità Flash</h2>
+    <p style="color:#6b7280;font-size:13px;margin-bottom:20px">Solo vocale. Parla, classifica, invia. Velocissimo.</p>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="type-btn-t" data-r="business" onclick="setFlashType('business')" style="flex:1;padding:10px;border-radius:10px;border:2px solid #2563EB;background:#2563EB22;color:#60A5FA;font-weight:700;font-size:13px;cursor:pointer">🏢 Azienda</button>
+      <button class="type-btn-t" data-r="residential" onclick="setFlashType('residential')" style="flex:1;padding:10px;border-radius:10px;border:2px solid #ffffff15;background:#1E293B;color:#6b7280;font-weight:700;font-size:13px;cursor:pointer">🏠 Privato</button>
+    </div>
+    <div style="text-align:center;margin-bottom:16px">
+      <button id="flashRecBtn" onclick="toggleFlashRec()" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#2563EB,#1D4ED8);border:none;color:#fff;font-size:40px;animation:pulse 2s infinite;cursor:pointer">🎤</button>
+      <div id="flashRecStatus" style="margin-top:10px;font-size:13px;color:#6b7280;font-weight:600">Tocca per registrare</div>
+    </div>
+    <textarea id="flashTranscript" placeholder="Il trascritto appare qui…" rows="3" style="width:100%;background:#1E293B;border:1px solid #ffffff15;border-radius:12px;padding:12px;color:#e5e7eb;font-size:14px;margin-bottom:12px"></textarea>
+    <div>
+      <label style="font-size:11px;color:#9ca3af;letter-spacing:1px;font-weight:700;display:block;margin-bottom:6px">RISULTATO</label>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button class="flash-result-btn" data-r="positive" onclick="setFlashResult('positive')" style="flex:1;padding:10px;border-radius:10px;border:2px solid #ffffff15;background:#1E293B;color:#6b7280;font-weight:700;font-size:12px;cursor:pointer">✓ Positivo</button>
+        <button class="flash-result-btn" data-r="followup" onclick="setFlashResult('followup')" style="flex:1;padding:10px;border-radius:10px;border:2px solid #f59e0b;background:#f59e0b22;color:#f59e0b;font-weight:700;font-size:12px;cursor:pointer">↻ Follow-up</button>
+        <button class="flash-result-btn" data-r="negative" onclick="setFlashResult('negative')" style="flex:1;padding:10px;border-radius:10px;border:2px solid #ffffff15;background:#1E293B;color:#6b7280;font-weight:700;font-size:12px;cursor:pointer">✗ Negativo</button>
+      </div>
+    </div>
+    <button onclick="submitFlash()" style="width:100%;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;color:#fff;border-radius:12px;padding:15px;font-weight:800;font-size:17px;cursor:pointer">⚡ Invia Flash</button>
+  </div>
+
+  <div id="visitModal" onclick="closeVisitModal()" style="display:none;position:fixed;inset:0;background:#00000088;z-index:200;align-items:center;justify-content:center;padding:16px">
+    <div onclick="event.stopPropagation()" style="background:#1E293B;border:1px solid #ffffff15;border-radius:20px;padding:24px;width:100%;max-height:85vh;overflow-y:auto">
+      <div id="visitModalContent"></div>
+    </div>
+  </div>
+
+  
+  <div id="loadingOverlay" style="display:none;position:fixed;inset:0;background:#0F172Acc;z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:16px">
+    <div style="width:48px;height:48px;border:3px solid #ffffff20;border-top:3px solid #60A5FA;border-radius:50%;animation:spin 1s linear infinite"></div>
+    <div id="loadingMsg" style="font-size:14px;color:#60A5FA;font-weight:600"></div>
+  </div>
+
+</div>
+
+<script type="module">import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, set, get, push, update, onValue, query, orderByChild, equalTo }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+const firebaseConfig = {
+apiKey: "AIzaSyCZ9UewYe58q3PKlLvbrpq8dkehrvHiXUY",
+authDomain: "fieldtracksales.firebaseapp.com",
+databaseURL: "https://fieldtracksales-default-rtdb.europe-west1.firebasedatabase.app",
+projectId: "fieldtracksales",
+storageBucket: "fieldtracksales.firebasestorage.app",
+messagingSenderId: "856016235189",
+appId: "1:856016235189:web:f39c8be1c7660283b8ecfc"
+};
+const fbApp = initializeApp(firebaseConfig);
+const auth  = getAuth(fbApp);
+const db    = getDatabase(fbApp);
+let currentAgent  = null;
+let gpsCoords     = null;
+let photoBase64   = null;
+let photoType     = 'image/jpeg';
+let currentResult = 'followup';
+let currentType   = 'business';
+let recognizer    = null;
+let isRecording   = false;
+let recTimerInt   = null;
+let recSeconds    = 0;
+let myVisits      = [];
+let editingVisitKey = null;
+onAuthStateChanged(auth, async user => {
+if (user) {
+const snap = await get(ref(db, 'agents'));
+let found = null, foundKey = null;
+snap.forEach(child => { if (child.val().email === user.email) { found = child.val(); foundKey = child.key; } });
+currentAgent = found || { id: user.uid, name: user.email, email: user.email };
+if (foundKey) currentAgent._key = foundKey;
+document.getElementById('loginScreen').style.display = 'none';
+document.getElementById('agentApp').classList.remove('hidden');
+document.getElementById('agentAvatar').textContent = currentAgent.name.charAt(0).toUpperCase();
+getGPS();
+loadMyVisits();
+showView('new');
+goStep(0);
+} else {
+document.getElementById('loginScreen').style.display = 'flex';
+document.getElementById('agentApp').classList.add('hidden');
+}
+});
+window.agentLogin = async () => {
+const code = document.getElementById('agentCode').value.trim().toUpperCase();
+const email = document.getElementById('agentEmail').value.trim();
+const pwd   = document.getElementById('agentPwd').value;
+const err   = document.getElementById('loginErr');
+err.style.display = 'none';
+if (!code || !email || pwd.length < 6) {
+err.textContent = 'Compila tutti i campi (password min 6 caratteri)';
+err.style.display = 'block'; return;
+}
+const snap = await get(ref(db, 'agents'));
+let agentKey = null, agentData = null;
+snap.forEach(child => { if (child.val().inviteCode === code) { agentKey = child.key; agentData = child.val(); } });
+if (!agentData) { err.textContent = 'Codice invito non valido.'; err.style.display = 'block'; return; }
+try {
+await createUserWithEmailAndPassword(auth, email, pwd);
+await set(ref(db, `agents/${agentKey}`), { ...agentData, email, status:'active' });
+} catch(e) {
+if (e.code === 'auth/email-already-in-use') {
+try { await signInWithEmailAndPassword(auth, email, pwd); }
+catch(e2) { err.textContent = 'Password errata.'; err.style.display = 'block'; }
+} else { err.textContent = e.message; err.style.display = 'block'; }
+}
+};
+window.agentLoginOnly = async () => {
+const email = document.getElementById('agentEmail').value.trim();
+const pwd   = document.getElementById('agentPwd').value;
+const err   = document.getElementById('loginErr');
+try { await signInWithEmailAndPassword(auth, email, pwd); }
+catch(e) { err.textContent = 'Email o password errati.'; err.style.display = 'block'; }
+};
+window.agentLogout = () => signOut(auth);
+function getGPS() {
+if (!navigator.geolocation) return;
+navigator.geolocation.getCurrentPosition(p => {
+gpsCoords = `${p.coords.latitude.toFixed(5)},${p.coords.longitude.toFixed(5)}`;
+document.getElementById('gpsStatus').textContent = '📍 GPS ✓';
+document.getElementById('gpsStatus').style.color = '#22c55e';
+document.getElementById('gpsInfo').innerHTML =
+`📍 GPS: <a href="https://maps.google.com/?q=${gpsCoords}" target="_blank" style="color:#22c55e;font-family:'Space Mono',monospace;text-decoration:underline">${gpsCoords}</a>`;
+}, () => {
+document.getElementById('gpsStatus').textContent = '📍 Negato';
+document.getElementById('gpsInfo').textContent = '📍 GPS non disponibile';
+});
+}
+window.showView = (v) => {
+document.getElementById('viewNew').classList.toggle('hidden', v !== 'new');
+document.getElementById('viewList').classList.toggle('hidden', v !== 'list');
+document.getElementById('viewFlash').classList.toggle('hidden', v !== 'flash');
+document.getElementById('navNew').classList.toggle('tab-active', v === 'new');
+document.getElementById('navList').classList.toggle('tab-active', v === 'list');
+document.getElementById('navFlash').classList.toggle('tab-active', v === 'flash');
+if (v === 'list') renderMyVisits();
+};
+window.setType = (t) => {
+currentType = t;
+document.querySelectorAll('.type-btn').forEach(btn => {
+const active = btn.dataset.t === t;
+btn.style.border = active ? '2px solid #2563EB' : '2px solid #ffffff15';
+btn.style.background = active ? '#2563EB22' : '#1E293B';
+btn.style.color = active ? '#60A5FA' : '#6b7280';
+});
+};
+window.goStep = (n) => {
+[0,1,2,3].forEach(i => document.getElementById(`step${i}`).classList.toggle('hidden', i !== n));
+[0,1,2,3].forEach(i => {
+const dot = document.getElementById(`dot${i}`);
+if (i < n) { dot.style.background='linear-gradient(135deg,#22c55e,#16a34a)'; dot.style.color='#fff'; dot.textContent='✓'; }
+else if (i === n) { dot.style.background='linear-gradient(135deg,#2563EB,#1D4ED8)'; dot.style.color='#fff'; dot.textContent=i===3?'✓':i+1; }
+else { dot.style.background='#1f2937'; dot.style.color='#6b7280'; dot.textContent=i+1; }
+});
+['01','12','23'].forEach((pair,i) => {
+document.getElementById(`line${pair}`).firstElementChild.style.width = i < n ? '100%' : '0%';
+});
+};
+window.photoSelected = (input) => {
+const file = input.files[0]; if (!file) return;
+photoType = file.type || 'image/jpeg';
+const reader = new FileReader();
+reader.onload = e => {
+const src = e.target.result;
+photoBase64 = src.split(',')[1];
+document.getElementById('photoPreview').src = src;
+document.getElementById('photoPreviewWrap').style.display = 'block';
+document.getElementById('photoArea').style.display = 'none';
+document.getElementById('btnAnalyzePhoto').style.display = 'block';
+};
+reader.readAsDataURL(file);
+};
+window.clearPhoto = () => {
+photoBase64 = null;
+document.getElementById('photoPreviewWrap').style.display = 'none';
+document.getElementById('photoArea').style.display = 'flex';
+document.getElementById('btnAnalyzePhoto').style.display = 'none';
+document.getElementById('photoInput').value = '';
+};
+const OCR_API_KEY = 'K88868977988957';
+window.analyzePhoto = async () => {
+showLoading('📷 Lettura testo in corso…');
+try {
+const compressed = await compressImage(photoBase64, photoType);
+const formData = new FormData();
+formData.append('apikey', OCR_API_KEY);
+formData.append('base64Image', `data:image/jpeg;base64,${compressed}`);
+formData.append('language', 'ita');
+formData.append('isOverlayRequired', 'false');
+formData.append('detectOrientation', 'true');
+formData.append('scale', 'true');
+formData.append('OCREngine', '2');
+const res = await fetch('https://api.ocr.space/parse/image', {
+method: 'POST',
+body: formData
+});
+const data = await res.json();
+const text = data?.ParsedResults?.[0]?.ParsedText || '';
+if (!text || data.IsErroredOnProcessing) {
+alert('Testo non leggibile. Compila manualmente.');
+hideLoading(); goStep(1); return;
+}
+const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 1);
+const emailMatch = text.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+const email = emailMatch ? emailMatch[0] : '';
+const phoneMatches = text.match(/(\+?[\d\s\(\)\-\/\.]{8,18})/g) || [];
+const phone = phoneMatches.map(p => p.trim()).filter(p => p.replace(/\D/g,'').length >= 7)[0] || '';
+const addrLine = lines.find(l => /\b(via|viale|corso|piazza|v\.le|str\.|strada|vicolo|largo|c\.so|loc\.)/i.test(l)) || '';
+const skipPatterns = [/@/, /www\./i, /http/i, /^\+?[\d\s\-]{7,}$/, /^(via|viale|corso|piazza)/i, /^(tel|fax|mob|cell|ufficio)/i];
+const nameLine = lines.find(l => l.length > 2 && !skipPatterns.some(p => p.test(l))) || '';
+document.getElementById('rContact').value = nameLine;
+document.getElementById('rAddress').value = addrLine;
+document.getElementById('rEmail').value   = email;
+document.getElementById('rPhone').value   = phone;
+} catch(e) {
+console.error('OCR error:', e);
+alert('Errore lettura. Compila manualmente.');
+}
+hideLoading();
+goStep(1);
+};
+async function compressImage(base64, type) {
+return new Promise(resolve => {
+const img = new Image();
+img.onload = () => {
+const canvas = document.createElement('canvas');
+let w = img.width, h = img.height;
+const maxDim = 1600;
+if (w > maxDim || h > maxDim) {
+if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+else { w = Math.round(w * maxDim / h); h = maxDim; }
+}
+canvas.width = w; canvas.height = h;
+canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+const compressed = canvas.toDataURL('image/jpeg', 0.85).split(',')[1];
+resolve(compressed);
+};
+img.src = `data:${type};base64,${base64}`;
+});
+}
+window.toggleRecording = () => { if (isRecording) stopRec(); else startRec(); };
+
+function startRec() {
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SR) { alert("Registrazione vocale non supportata. Scrivi l'esito."); return; }
+document.getElementById('transcriptBox').value = '';
+let finalText = '';
+recognizer = new SR();
+recognizer.lang = 'it-IT';
+recognizer.continuous = true;
+recognizer.interimResults = true;
+recognizer.onresult = e => {
+  let interim = '';
+  for (let i = e.resultIndex; i < e.results.length; i++) {
+    const t = e.results[i][0].transcript;
+    if (e.results[i].isFinal) { finalText += (finalText ? ' ' : '') + t.trim(); }
+    else { interim += t; }
+  }
+  document.getElementById('transcriptBox').value = finalText + (interim ? ' ' + interim : '');
+};
+recognizer.onend = () => { if (isRecording) { try { recognizer.start(); } catch(e) {} } };
+recognizer.onerror = (e) => { if (e.error !== 'no-speech') stopRec(); };
+recognizer.start();
+isRecording = true;
+recSeconds = 0;
+recTimerInt = setInterval(() => {
+recSeconds++;
+const m = Math.floor(recSeconds/60).toString().padStart(2,'0');
+const s = (recSeconds%60).toString().padStart(2,'0');
+document.getElementById('recTimer').textContent = `⏱ ${m}:${s}`;
+}, 1000);
+const btn = document.getElementById('recBtn');
+btn.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
+btn.style.animation = 'pulseRed 1.5s infinite';
+btn.textContent = '⏹';
+document.getElementById('recStatus').textContent = '● Registrazione in corso…';
+document.getElementById('recStatus').style.color = '#ef4444';
+}
+
+function stopRec() {
+isRecording = false;
+clearInterval(recTimerInt);
+try { recognizer?.stop(); } catch(e) {}
+const btn = document.getElementById('recBtn');
+btn.style.background = 'linear-gradient(135deg,#2563EB,#1D4ED8)';
+btn.style.animation = 'pulse 2s infinite';
+btn.textContent = '🎤';
+document.getElementById('recStatus').textContent = '✓ Registrazione completata';
+document.getElementById('recStatus').style.color = '#22c55e';
+}
+window.analyzeVoice = async () => {
+const text = document.getElementById('transcriptBox').value.trim();
+if (!text) { alert('Registra o scrivi qualcosa prima.'); return; }
+showLoading('🎤 Analisi esito…');
+await new Promise(r => setTimeout(r, 300));
+const t = text.toLowerCase();
+let result = 'followup';
+const positiveWords = ['acquistato','firmato','contratto','venduto','chiuso','accordo','interesse','sì','si','positivo','ordine','confermato','preso','fatto','disponibile','vuole','vuoi','ok'];
+const negativeWords = ['no','non interessato','rifiutato','negativo','non vuole','assente','porta chiusa','non risponde','via','andato','non disponibile','già','ce l\'ha'];
+const followupWords = ['richiamare','richiamare','appuntamento','fissato','domani','settimana','pensare','valutare','ripassare','tornare','follow','ricontattare'];
+const posScore = positiveWords.filter(w => t.includes(w)).length;
+const negScore = negativeWords.filter(w => t.includes(w)).length;
+const folScore = followupWords.filter(w => t.includes(w)).length;
+if (posScore > negScore && posScore > folScore) result = 'positive';
+else if (negScore > posScore && negScore >= folScore) result = 'negative';
+else result = 'followup';
+const outcome = text.charAt(0).toUpperCase() + text.slice(1);
+document.getElementById('rOutcome').value = outcome;
+setResult(result);
+hideLoading();
+goStep(2);
+};
+window.skipVoice = () => {
+document.getElementById('rOutcome').value = document.getElementById('transcriptBox').value || '';
+setResult('followup');
+goStep(2);
+};
+window.setResult = (r) => {
+currentResult = r;
+const colors = { positive:'#22c55e', followup:'#f59e0b', negative:'#ef4444' };
+document.querySelectorAll('.result-btn').forEach(btn => {
+const active = btn.dataset.r === r;
+btn.style.border = `2px solid ${active ? colors[r] : '#ffffff15'}`;
+btn.style.background = active ? colors[r]+'22' : '#1E293B';
+btn.style.color = active ? colors[r] : '#6b7280';
+});
+};
+window.submitVisit = async () => {
+showLoading(editingVisitKey ? '✏️ Aggiornamento…' : '📤 Invio visita…');
+const visitData = {
+agentId:   currentAgent.id || currentAgent._key || 'unknown',
+agentName: currentAgent.name,
+timestamp: editingVisitKey ? undefined : Date.now(),
+type:      currentType,
+contact:   document.getElementById('rContact').value.trim() || '—',
+address:   document.getElementById('rAddress').value.trim() || '—',
+email:     document.getElementById('rEmail').value.trim()   || '',
+phone:     document.getElementById('rPhone').value.trim()   || '',
+gps:       gpsCoords || '',
+outcome:   document.getElementById('rOutcome').value.trim() || '',
+result:    currentResult,
+};
+Object.keys(visitData).forEach(k => visitData[k] === undefined && delete visitData[k]);
+try {
+if (editingVisitKey) {
+await update(ref(db, `visits/${editingVisitKey}`), visitData);
+} else {
+visitData.timestamp = Date.now();
+await push(ref(db, 'visits'), visitData);
+}
+} catch(e) { alert('Errore: ' + e.message); hideLoading(); return; }
+editingVisitKey = null;
+hideLoading();
+goStep(3);
+};
+function loadMyVisits() {
+onValue(ref(db, 'visits'), snap => {
+myVisits = [];
+snap.forEach(child => {
+const v = child.val();
+if (v.agentId === (currentAgent.id || currentAgent._key)) {
+myVisits.push({ ...v, _key: child.key });
+}
+});
+myVisits.sort((a,b) => b.timestamp - a.timestamp);
+});
+}
+window.renderMyVisits = () => {
+const wrap = document.getElementById('myVisitsList');
+if (!myVisits.length) {
+wrap.innerHTML = '<div style="text-align:center;color:#6b7280;padding:40px">Nessuna visita ancora.</div>';
+return;
+}
+const resColor = { positive:'#22c55e', followup:'#f59e0b', negative:'#ef4444' };
+const resLabel = { positive:'✓ Positivo', followup:'↻ Follow-up', negative:'✗ Negativo' };
+const typeIcon = { business:'🏢', residential:'🏠' };
+wrap.innerHTML = myVisits.map(v => `
+<div onclick="openVisitDetail('${v._key}')" style="background:#1E293B;border:1px solid #ffffff0f;border-radius:12px;padding:14px 16px;margin-bottom:10px;cursor:pointer">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+<div style="font-weight:700;font-size:14px">${typeIcon[v.type]||'📍'} ${esc(v.contact||'—')}</div>
+<span style="background:${resColor[v.result]||'#6b7280'};color:#fff;border-radius:20px;padding:2px 8px;font-size:10px;font-weight:700">${resLabel[v.result]||'—'}</span>
+</div>
+<div style="font-size:11px;color:#6b7280">${fmtDate(v.timestamp)}</div>
+<div style="font-size:12px;color:#9ca3af;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.outcome||'')}</div>
+</div>`).join('');
+};
+window.openVisitDetail = (key) => {
+const v = myVisits.find(x => x._key === key);
+if (!v) return;
+const resColor = { positive:'#22c55e', followup:'#f59e0b', negative:'#ef4444' };
+const resLabel = { positive:'✓ Positivo', followup:'↻ Follow-up', negative:'✗ Negativo' };
+document.getElementById('visitModalContent').innerHTML = `
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+<div><div style="font-weight:800;font-size:18px">${esc(v.contact||'—')}</div>
+<div style="color:#6b7280;font-size:12px;margin-top:2px">${fmtDate(v.timestamp)}</div></div>
+<button onclick="closeVisitModal()" style="background:#ffffff10;border:none;color:#9ca3af;border-radius:8px;width:30px;height:30px;font-size:16px;cursor:pointer">✕</button>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+${vfield('📍 Indirizzo', v.address)}
+${vfield('📧 Email', v.email||'—')}
+${vfield('📞 Telefono', v.phone||'—')}
+${v.gps ? `<div style="background:#0F172A;border-radius:8px;padding:9px 12px"><div style="font-size:10px;color:#6b7280;margin-bottom:2px">🛰 GPS</div><a href="https://maps.google.com/?q=${v.gps}" target="_blank" style="font-size:13px;color:#2563EB;font-family:'Space Mono',monospace">${v.gps} 🗺</a></div>` : ''}
+${vfield('🎤 Esito', v.outcome||'—')}
+<div style="text-align:center"><span style="background:${resColor[v.result]||'#6b7280'};color:#fff;border-radius:20px;padding:4px 14px;font-size:12px;font-weight:700">${resLabel[v.result]||'—'}</span></div>
+</div>
+<button onclick="editVisit('${v._key}')" style="width:100%;background:linear-gradient(135deg,#2563EB,#1D4ED8);border:none;color:#fff;border-radius:10px;padding:12px;font-weight:800;font-size:14px;cursor:pointer">✏️ Modifica / Aggiorna feedback</button>`;
+document.getElementById('visitModal').style.display = 'flex';
+};
+window.editVisit = (key) => {
+const v = myVisits.find(x => x._key === key);
+if (!v) return;
+closeVisitModal();
+editingVisitKey = key;
+currentType = v.type || 'business';
+setType(currentType);
+document.getElementById('rContact').value = v.contact || '';
+document.getElementById('rAddress').value = v.address || '';
+document.getElementById('rEmail').value   = v.email   || '';
+document.getElementById('rPhone').value   = v.phone   || '';
+document.getElementById('rOutcome').value = v.outcome || '';
+setResult(v.result || 'followup');
+showView('new');
+goStep(2);
+};
+window.closeVisitModal = () => { document.getElementById('visitModal').style.display = 'none'; };
+window.resetWizard = () => {
+editingVisitKey = null;
+photoBase64 = null;
+document.getElementById('photoInput').value = '';
+document.getElementById('photoPreviewWrap').style.display = 'none';
+document.getElementById('photoArea').style.display = 'flex';
+document.getElementById('btnAnalyzePhoto').style.display = 'none';
+document.getElementById('transcriptBox').value = '';
+document.getElementById('recStatus').textContent = 'Tocca per registrare';
+document.getElementById('recStatus').style.color = '#6b7280';
+document.getElementById('recTimer').textContent = '';
+['rContact','rAddress','rEmail','rPhone','rOutcome'].forEach(id => document.getElementById(id).value = '');
+setResult('followup');
+setType('business');
+getGPS();
+goStep(0);
+};
+function showLoading(msg) { document.getElementById('loadingMsg').textContent = msg; document.getElementById('loadingOverlay').style.display = 'flex'; }
+function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
+function fmtDate(ts) { return new Date(ts).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function vfield(label, val) { return `<div style="background:#0F172A;border-radius:8px;padding:9px 12px"><div style="font-size:10px;color:#6b7280;margin-bottom:2px">${label}</div><div style="font-size:13px;font-weight:600">${esc(val)}</div></div>`; }
+
+function launchConfetti() {
+  const colors = ['#2563EB','#1D4ED8','#f59e0b','#22c55e','#ffffff','#60A5FA'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width = (Math.random() * 8 + 6) + 'px';
+    el.style.height = (Math.random() * 8 + 6) + 'px';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    el.style.animationDelay = (Math.random() * 1.5) + 's';
+    el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+  }
+}
+
+function updateTodayCount() {
+  const today = new Date().toDateString();
+  const agId = currentAgent?.id || currentAgent?._key || '';
+  const todayVisits = myVisits.filter(v => {
+    const vDate = new Date(v.timestamp).toDateString();
+    return vDate === today && v.agentId === agId;
+  });
+  const el = document.getElementById('todayCount');
+  const lbl = document.getElementById('todayLabel');
+  if (el) el.textContent = todayVisits.length;
+  if (lbl) {
+    const pos = todayVisits.filter(v => v.result === 'positive').length;
+    lbl.textContent = pos > 0 ? pos + ' positive 🔥' : 'continua così!';
+  }
+}
+
+let flashRecognizer = null;
+let isFlashRecording = false;
+let flashType = 'business';
+let flashResult = 'followup';
+
+window.setFlashType = (t) => {
+  flashType = t;
+  document.querySelectorAll('.type-btn-t').forEach(btn => {
+    const active = btn.dataset.r === t;
+    btn.style.border = active ? '2px solid #2563EB' : '2px solid #ffffff15';
+    btn.style.background = active ? '#2563EB22' : '#1E293B';
+    btn.style.color = active ? '#60A5FA' : '#6b7280';
+  });
+};
+
+window.setFlashResult = (r) => {
+  flashResult = r;
+  const colors = { positive:'#22c55e', followup:'#f59e0b', negative:'#ef4444' };
+  document.querySelectorAll('.flash-result-btn').forEach(btn => {
+    const active = btn.dataset.r === r;
+    btn.style.border = '2px solid ' + (active ? colors[r] : '#ffffff15');
+    btn.style.background = active ? colors[r]+'22' : '#1E293B';
+    btn.style.color = active ? colors[r] : '#6b7280';
+  });
+};
+
+window.toggleFlashRec = () => {
+  if (isFlashRecording) stopFlashRec(); else startFlashRec();
+};
+
+function startFlashRec() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { alert('Riconoscimento vocale non supportato.'); return; }
+  document.getElementById('flashTranscript').value = '';
+  let finalFlashText = '';
+  flashRecognizer = new SR();
+  flashRecognizer.lang = 'it-IT';
+  flashRecognizer.continuous = true;
+  flashRecognizer.interimResults = true;
+  flashRecognizer.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) {
+        finalFlashText += (finalFlashText ? ' ' : '') + t.trim();
+      } else {
+        interim += t;
+      }
+    }
+    document.getElementById('flashTranscript').value = finalFlashText + (interim ? ' ' + interim : '');
+  };
+  flashRecognizer.onend = () => { if (isFlashRecording) { try { flashRecognizer.start(); } catch(e) {} } };
+  flashRecognizer.onerror = (e) => { if (e.error !== 'no-speech') stopFlashRec(); };
+  flashRecognizer.start();
+  isFlashRecording = true;
+  const btn = document.getElementById('flashRecBtn');
+  btn.style.background = 'linear-gradient(135deg,#ef4444,#2563EB)';
+  btn.textContent = '⏹';
+  document.getElementById('flashRecStatus').textContent = '● Registrazione…';
+  document.getElementById('flashRecStatus').style.color = '#ef4444';
+}
+
+function stopFlashRec() {
+  isFlashRecording = false;
+  try { flashRecognizer?.stop(); } catch(e) {}
+  const btn = document.getElementById('flashRecBtn');
+  btn.style.background = 'linear-gradient(135deg,#2563EB,#1D4ED8)';
+  btn.textContent = '🎤';
+  document.getElementById('flashRecStatus').textContent = '✓ Completata';
+  document.getElementById('flashRecStatus').style.color = '#22c55e';
+  const t = document.getElementById('flashTranscript').value.toLowerCase();
+  const positiveWords = ['acquistato','firmato','contratto','venduto','chiuso','ordine','confermato','interesse','sì','ok','positivo'];
+  const negativeWords = ['no','rifiutato','non interessato','porta chiusa','assente','non vuole'];
+  const posScore = positiveWords.filter(w => t.includes(w)).length;
+  const negScore = negativeWords.filter(w => t.includes(w)).length;
+  if (posScore > negScore) setFlashResult('positive');
+  else if (negScore > 0) setFlashResult('negative');
+  else setFlashResult('followup');
+}
+
+window.submitFlash = async () => {
+  const text = document.getElementById('flashTranscript').value.trim();
+  if (!text) { alert('Registra qualcosa prima.'); return; }
+  showLoading('📍 Geolocalizzazione…');
+
+  // Extract contact name from speech (es. "sono da Mario Rossi", "visita a Farmacia Centrale")
+  let contactName = '—';
+  const nameMatch = text.match(/(?:da|presso|da|visita|sono a|sono in|sono da)\s+([A-ZÀÈÉÌÒÙA-Za-zÀ-ÿ][A-Za-zÀ-ÿ\s]{2,30}?)(?:\s*[,\.!]|$)/i);
+  if (nameMatch) contactName = nameMatch[1].trim();
+
+  // Reverse geocode GPS -> address readable
+  let addressText = gpsCoords || '—';
+  if (gpsCoords && gpsCoords.includes(',')) {
+    try {
+      const [lat, lng] = gpsCoords.split(',');
+      const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat.trim()}&lon=${lng.trim()}&format=json&accept-language=it`);
+      const geoData = await geoRes.json();
+      const a = geoData.address || {};
+      const road = a.road || a.pedestrian || a.footway || a.street || '';
+      const num  = a.house_number || '';
+      const city = a.city || a.town || a.village || a.municipality || '';
+      const cap  = a.postcode || '';
+      addressText = [road + (num ? ' ' + num : ''), cap + (city ? ' ' + city : '')].filter(s => s.trim()).join(', ') || gpsCoords;
+    } catch(e) { addressText = gpsCoords; }
+  }
+
+  showLoading('⚡ Invio flash…');
+  const visit = {
+    agentId:   currentAgent.id || currentAgent._key || 'unknown',
+    agentName: currentAgent.name,
+    timestamp: Date.now(),
+    type:      flashType,
+    contact:   contactName,
+    address:   addressText,
+    email: '', phone: '',
+    gps:       gpsCoords || '',
+    outcome:   text,
+    result:    flashResult,
+  };
+  try {
+    await push(ref(db, 'visits'), visit);
+    launchConfetti();
+    updateTodayCount();
+    document.getElementById('flashTranscript').value = '';
+    setFlashResult('followup');
+    setFlashType('business');
+    document.getElementById('flashRecStatus').textContent = 'Tocca per registrare';
+    document.getElementById('flashRecStatus').style.color = '#6b7280';
+    document.getElementById('flashRecBtn').textContent = '🎤';
+    alert(`✓ Visita registrata!\n📍 ${addressText}`);
+  } catch(e) { alert('Errore: ' + e.message); }
+  hideLoading();
+};
+
+</script>
+</body>
+</html>
